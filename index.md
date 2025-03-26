@@ -1,99 +1,112 @@
 ---
+layout: default
 title: Home
-layout: home
 nav_order: 1
-description: "Just the Docs is a responsive Jekyll theme with built-in search that is easily customizable and hosted on GitHub Pages."
+description: "NephōSec Wiz Email Integration documentation hosted on GitLab Pages."
 permalink: /
 ---
 
-# Focus on writing good documentation
+# NephōSec Wiz Email Integration Documentation
 {: .fs-9 }
 
-Just the Docs gives your documentation a jumpstart with a responsive Jekyll theme that is easily customizable and hosted on GitHub Pages.
+Easily send branded emails from Wiz generated issues 
 {: .fs-6 .fw-300 }
 
-[Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
-[View it on GitHub][Just the Docs repo]{: .btn .fs-5 .mb-4 .mb-md-0 }
+[Download CloudFormation Template](https://wiz-custom-email-integration-cft-bucket.s3.us-east-1.amazonaws.com/wiz-custom-email-integration-cft%3Alatest.yaml){: .btn .fs-5 .mb-4 .mb-md-0 target="_blank"} [CloudFormation Quick Launch](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?templateURL=https://wiz-custom-email-integration-cft-bucket.s3.us-east-1.amazonaws.com/wiz-custom-email-integration-cft%3Alatest.yaml&stackName=NephoSecCustomWizEmailIntegration){: .btn .fs-5 .mb-4 .mb-md-0 target="_blank"}
+
+You must be Authenticated to AWS to use the links above.
 
 ---
 
-{: .warning }
-> This website documents the features of the current `main` branch of the Just the Docs theme. See [the CHANGELOG]({% link CHANGELOG.md %}) for a list of releases, new features, and bug fixes.
+## Contents
 
-Just the Docs is a theme for generating static websites with [Jekyll]. You can write source files for your web pages using [Markdown], the [Liquid] templating language, and HTML.[^1] Jekyll builds your site by converting all files that have [front matter] to HTML. Your [Jekyll configuration] file determines which theme to use, and sets general parameters for your site, such as the URL of its home page.
+- [NephōSec Wiz Email Integration Documentation](#nephōsec-wiz-email-integration-documentation)
+  - [About](#about)
+  - [Prerequisites](#prerequisites)
+  - [AWS Infrastructure](#aws-infrastructure)
+  - [Updating Wiz Email Integration Module](#updating-wiz-email-integration-module)
+- [Templates](#templates)
+- [Custom Templates](#custom-templates)
+  - [Logs](#logs)
+  - [Common Issues](#common-issues)
+  - [Support](#support)
 
-Jekyll builds this Just the Docs theme docs website using the theme itself. These web pages show how your web pages will look *by default* when you use this theme. But you can easily *[customize]* the theme to make them look completely different!
+---
 
-Browse the docs to learn more about how to use this theme.
+## About
 
-## Getting started
+You can configure Wiz to send pre-formatted emails to selected recipients, either by manually running an Action on one 
+or more Issues or automatically using an Automation Rule. The NephoSec Wiz Email Integration allows you to utilize 3 
+default email templates, as well as the ability to customize and add your own template(s). 
 
-The [Just the Docs Template] provides the simplest, quickest, and easiest way to create a new website that uses the Just the Docs theme. To get started with creating a site, just click "[use the template]"!
+---
 
-{: .note }
-To use the theme, you do ***not*** need to clone or fork the [Just the Docs repo]! You should do that only if you intend to browse the theme docs locally, contribute to the development of the theme, or develop a new theme based on Just the Docs.
+## Prerequisites
 
-You can easily set the site created by the template to be published on [GitHub Pages] – the [template README] file explains how to do that, along with other details.
+Before you get started, make sure you have the following:
 
-If [Jekyll] is installed on your computer, you can also build and preview the created site *locally*. This lets you test changes before committing them, and avoids waiting for GitHub Pages.[^2] And you will be able to deploy your local build to a different platform than GitHub Pages.
+* An active Wiz License
+* At least one active Wiz Deployment
+* Access to Wiz User granted with a Wiz Role that has Integrations create or write permissions, Automation Rules create or write permissions
+* Access to Wiz User granted with a Wiz Role that has Automation Rules create or write permissions
+* Access to Wiz User granted with a Wiz Role that has Automation Actions create or write permissions
+* Access to AWS User/Service Account with Role/Policy attached that grants creation of CloudFormation Stack
+* AWS Simple Email Service environment that has been upgraded from sandbox mode. This is done on a per-account basis. 
+**[AWS Documentation](https://docs.aws.amazon.com/ses/latest/dg/request-production-access.html)**<br>
+* A license key from NephoSec **this will be manually emailed to you after signing up for the product on the [NephoSec site](https://nephosec.com/wiz-email-integration-module/)**<br>
 
-More specifically, the created site:
+---
 
-- uses a gem-based approach, i.e. uses a `Gemfile` and loads the `just-the-docs` gem
-- uses the [GitHub Pages / Actions workflow] to build and publish the site on GitHub Pages
+## AWS Infrastructure
 
-Other than that, you're free to customize sites that you create with the template, however you like. You can easily change the versions of `just-the-docs` and Jekyll it uses, as well as adding further plugins.
+Below are the resources created by the CloudFormation Template:
 
-{: .note }
-See the theme [README][Just the Docs README] for how to use the theme as a gem without creating a new site.
+- Lambda Function: Function, Role, Policy, Log Group, EventSourceMapping
+- SimpleEmailService (SES) Identity: Sender Email
+- SimpleQueueService (SQS) Queue: Queue, Policy, DeadLetter Queue
+- SimpleNotificationService (SNS) Subscription: Subscription, Topic
 
-## About the project
 
-Just the Docs is &copy; 2017-{{ "now" | date: "%Y" }} by [Patrick Marsceill](https://patrickmarsceill.com).
+### Updating Wiz Email Integration Module
+New release of the Wiz Email Integration Module are released as container images. The lambda is by default pointed at 
+the latest tag on the container registry. Even so new versions of the image are not used until the lambda is explicitly 
+told to pull a new image. You can do so by following the instructions below. Release notes will be listed here on the 
+documentation site. 
 
-### License
+1. Navigate to Lambda Functions
+2. Locate and select "NephoSec Wiz Integration Module"
+3. Under "Image" select "Deploy New Image"
+4. Click "Save" and wait for new image deployment
 
-Just the Docs is distributed by an [MIT license](https://github.com/just-the-docs/just-the-docs/tree/main/LICENSE.txt).
+---
 
-### Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change. Read more about becoming a contributor in [our GitHub repo](https://github.com/just-the-docs/just-the-docs#contributing).
+# Templates
 
-#### Thank you to the contributors of Just the Docs!
+Three templates are provided for varying degrees of severity/user response. These can be used by referencing the below 
+template names in the action template. The "template" key can be found under the "resource" key.
 
-<ul class="list-style-none">
-{% for contributor in site.github.contributors %}
-  <li class="d-inline-block mr-1">
-     <a href="{{ contributor.html_url }}"><img src="{{ contributor.avatar_url }}" width="32" height="32" alt="{{ contributor.login }}"></a>
-  </li>
-{% endfor %}
-</ul>
+* For_Your_Action
+* For_Your_Awareness
+* For_Your_Information
 
-### Code of Conduct
+# Custom Templates
 
-Just the Docs is committed to fostering a welcoming community.
+If your organization is interested in customizing an email template to use with this integration please reach out to us 
+for design requirements. 
 
-[View our Code of Conduct](https://github.com/just-the-docs/just-the-docs/tree/main/CODE_OF_CONDUCT.md) on our GitHub repository.
+___
 
-----
+## Logs
 
-[^1]: The [source file for this page] uses all three markup languages.
+To troubleshoot or capture issues/errors a Log Group named `/aws/lambda/NephoSecCustomEmailIntegrationLambda` is created
+during the CloudFormation deployment. To access the Log Group start at the AWS Console and navigate to the "CloudWatch" 
+service page. Once there, look for "Logs" on the left pane and select "Log Groups".  The Log Group can also be found in 
+the "Monitor" tab of the Lambda Function page. Located at the top right of this view is a "View Cloudwatch Logs" button."
 
-[^2]: [It can take up to 10 minutes for changes to your site to publish after you push the changes to GitHub](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/creating-a-github-pages-site-with-jekyll#creating-your-site).
+___
 
-[Jekyll]: https://jekyllrb.com
-[Markdown]: https://daringfireball.net/projects/markdown/
-[Liquid]: https://github.com/Shopify/liquid/wiki
-[Front matter]: https://jekyllrb.com/docs/front-matter/
-[Jekyll configuration]: https://jekyllrb.com/docs/configuration/
-[source file for this page]: https://github.com/just-the-docs/just-the-docs/blob/main/index.md
-[Just the Docs Template]: https://just-the-docs.github.io/just-the-docs-template/
-[Just the Docs]: https://just-the-docs.com
-[Just the Docs repo]: https://github.com/just-the-docs/just-the-docs
-[Just the Docs README]: https://github.com/just-the-docs/just-the-docs/blob/main/README.md
-[GitHub Pages]: https://pages.github.com/
-[Template README]: https://github.com/just-the-docs/just-the-docs-template/blob/main/README.md
-[GitHub Pages / Actions workflow]: https://github.blog/changelog/2022-07-27-github-pages-custom-github-actions-workflows-beta/
-[customize]: {% link docs/customization.md %}
-[use the template]: https://github.com/just-the-docs/just-the-docs-template/generate
+
+## Support
+
+For assistance or feature requests related to NephoSec's Wiz Email Integration Module, please join our community [Slack](https://nephosec-community.slack.com/ssb/redirect#/shared-invite/email){: target="_blank"} and post in the `#wiz-email-integration-module` channel.
